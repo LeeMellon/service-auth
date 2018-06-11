@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
+import { AuthService } from './core/auth.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [RouterModule]
 })
 export class AppComponent {
-  title = 'app';
+
+  constructor(private authSvc: AuthService) {}
+
+
+  signOut() {
+    this.authSvc.signOut();
+  }
 }

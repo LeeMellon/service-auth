@@ -1,0 +1,12 @@
+<h1>Home Page</h1>
+
+<a routerLink="/login">
+  <h3>To Login</h3>
+</a>
+<a routerLink="/register">
+  <h3>To Register</h3>
+</a>
+<a [routerLink]="['/secret', 'id']">
+  <h3>To Secret</h3>
+</a>
+<a style="cursor: pointer;" (click)="signOut()"><h3>SignOut</h3></a>

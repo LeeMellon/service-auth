@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AuthService } from './auth.service';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
@@ -11,7 +13,7 @@ import { AuthService } from './auth.service';
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
-  declarations: [],
-  providers: [AuthService]
+  // declarations: [LoginComponent, RegisterComponent],
+  // providers: [AuthService]
 })
 export class CoreModule { }
