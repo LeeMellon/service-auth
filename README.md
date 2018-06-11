@@ -1,3 +1,10 @@
+### Notes
+* needs credentials in environments/environment.ts
+* as this is still a work in progress I reccomen only linking ot test db for the time being
+* needs navigation to/from user profile page
+* extra data passed to user not saving to db, but authorized user is created. 
+
+
 # AuthSetup
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.7.

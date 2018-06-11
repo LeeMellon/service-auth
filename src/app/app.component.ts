@@ -10,10 +10,5 @@ import { RouterModule } from '@angular/router';
 })
 export class AppComponent {
 
-  constructor(private authSvc: AuthService) {}
-
-
-  signOut() {
-    this.authSvc.signOut();
-  }
+  constructor() {}
 }
