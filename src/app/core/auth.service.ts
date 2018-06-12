@@ -83,15 +83,13 @@ export class AuthService {
   //// Email/Password Auth ////
 
   emailSignUp(email, password, displayName, img) {
-    console.log(displayName);
     return this.afAuth.auth
     .createUserWithEmailAndPassword(email, password)
     .then(credential => {
-      const thisUser: ProfileUser = {email: email, userName: displayName, imgURL: img, uid: credential.uid};
-      console.log('thisUser on creation  ' + thisUser.uid + 'thisUser name  ' + thisUser.userName + 'email  ' + thisUser.email);
+      const userData = {email: email, userName: displayName, imgURL: img, uid: credential.user.uid, securityLvl: 10};
         this.notify.update('Welcome to Firestarter!!!', 'success');
         this.router.navigate(['profile']);
-        return this.updateNewUserData(credential.user, thisUser); // if using firestore
+        return this.updateNewUserData(userData); // if using firestore
       })
       .catch(error => this.handleError(error));
   }
@@ -99,11 +97,6 @@ export class AuthService {
   emailLogin(email: string, password: string) {
     return this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
-      .then(credential => {
-        this.notify.update('Welcome to Firestarter!!!', 'success');
-        this.router.navigate(['profile']);
-        return this.updateUserData(credential.user);
-      })
       .catch(error => this.handleError(error));
   }
 
@@ -131,38 +124,33 @@ export class AuthService {
   }
 
   // Sets user data to firestore after succesful login
-  private updateUserData(user: ProfileUser) {
+  private updateUserData(userData: ProfileUser) {
     const userRef: AngularFirestoreDocument<ProfileUser> = this.afs.doc(
-      `users/${user.uid}`
+      `users/${userData.uid}`
     );
 
       const data: ProfileUser = {
-      uid: user.uid,
-      email: user.email || null,
-      userName: user.userName || 'nameless user',
-      imgURL: user.imgURL || 'https://goo.gl/Fz9nrQ'
+      uid: userData.uid,
+      email: userData.email,
+      userName: userData.userName,
+      imgURL: userData.imgURL,
+      securityLvl: userData.securityLvl
     };
-    // console.log('data ' + data.email + '  ' + data.displayName + '  ' + data.uid);
     return userRef.set(data);
   }
 
    // Sets user data to firestore after succesful login
-   // NOT DOING WHAT ITS SUPPOSED TO. FIRESTORE DOCS NOT SAVING CORRETLY(?)
-  //  EXTRA USER INFO DOES NOT SAVE TO DB ???
-   private updateNewUserData(user, thisUser: ProfileUser) {
+   private updateNewUserData(userData: ProfileUser) {
     const userRef: AngularFirestoreDocument<ProfileUser> = this.afs.doc(
-      `users/${user.uid}`
+      `users/${userData.uid}`
     );
-    console.log('usr ' + user.uid);
-    console.log('thisUser ' + thisUser.uid);
-
     const data: ProfileUser = {
-      uid: user.uid,
-      email: user.email,
-      userName: thisUser.userName,
-      imgURL: thisUser.imgURL || 'https://goo.gl/Fz9nrQ'
+      uid: userData.uid,
+      email: userData.email,
+      userName: userData.userName,
+      imgURL: userData.imgURL || 'https://goo.gl/Fz9nrQ',
+      securityLvl: 10
     };
-    console.log('data ' + data.email + '  ' + data.userName + '  ' + data.uid);
     return userRef.set(data);
   }
 }

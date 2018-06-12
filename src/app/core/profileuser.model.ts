@@ -3,6 +3,7 @@ export class ProfileUser {
     userName: string;
     imgURL: string;
     uid: string;
+    securityLvl: number;
 
     constructor(email, userName, imgURL) {}
 }
