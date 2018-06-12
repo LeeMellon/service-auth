@@ -9,4 +9,7 @@
 <a [routerLink]="['/secret', 'id']">
   <h3>To Secret</h3>
 </a>
-<a style="cursor: pointer;" (click)="signOut()"><h3>SignOut</h3></a>
+<!-- <div *ngIf='user'> -->
+  <div>
+      <a style="cursor: pointer;" (click)="signOut()"><h3>SignOut</h3></a>
+</div>

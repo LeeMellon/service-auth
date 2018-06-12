@@ -7,17 +7,19 @@ import { NotifyService } from './notify.service';
 import * as firebase from 'firebase';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ProfileUser } from './profileuser.model';
 
-export interface User {
-  uid: string;
-  email?: string | null;
-  photoURL?: string;
-  displayName?: string;
-}
+// export interface User {
+//   uid: string;
+//   email?: string | null;
+//   photoURL?: string;
+//   displayName?: string;
+// }
 
 @Injectable()
 export class AuthService {
-  user: Observable<User | null>;
+  user: Observable<ProfileUser | null>;
+  loggedIn: boolean;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -28,8 +30,10 @@ export class AuthService {
     this.user = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
-          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+          this.loggedIn = true;
+          return this.afs.doc<ProfileUser>(`users/${user.uid}`).valueChanges();
         } else {
+          this.loggedIn = false;
           return of(null);
         }
       })
@@ -117,6 +121,7 @@ export class AuthService {
   }
 
   signOut() {
+    console.log(this.loggedIn);
     this.afAuth.auth.signOut().then(() => {
       this.router.navigate(['/']);
     });
@@ -129,36 +134,36 @@ export class AuthService {
   }
 
   // Sets user data to firestore after succesful login
-  private updateUserData(user: User) {
-    const userRef: AngularFirestoreDocument<User> = this.afs.doc(
+  private updateUserData(user: ProfileUser) {
+    const userRef: AngularFirestoreDocument<ProfileUser> = this.afs.doc(
       `users/${user.uid}`
     );
 
-      const data: User = {
+      const data: ProfileUser = {
       uid: user.uid,
       email: user.email || null,
-      displayName: user.displayName || 'nameless user',
-      photoURL: user.photoURL || 'https://goo.gl/Fz9nrQ'
+      userName: user.userName || 'nameless user',
+      imgURL: user.imgURL || 'https://goo.gl/Fz9nrQ'
     };
-    console.log('data ' + data.email + '  ' + data.displayName + '  ' + data.uid);
+    // console.log('data ' + data.email + '  ' + data.displayName + '  ' + data.uid);
     return userRef.set(data);
   }
 
    // Sets user data to firestore after succesful login
    // NOT DOING WHAT ITS SUPPOSED TO. FIRESTORE DOCS NOT SAVING CORRETLY(?)
   //  EXTRA USER INFO DOES NOT SAVE TO DB ???
-   private updateNewUserData(user: User, email, displayName, photoURL) {
-    const userRef: AngularFirestoreDocument<User> = this.afs.doc(
+   private updateNewUserData(user: ProfileUser, email, displayName, photoURL) {
+    const userRef: AngularFirestoreDocument<ProfileUser> = this.afs.doc(
       `users/${user.uid}`
     );
 
-    const data: User = {
+    const data: ProfileUser = {
       uid: user.uid,
       email: user.email || null,
-      displayName: displayName || 'nameless user',
-      photoURL: photoURL || 'https://goo.gl/Fz9nrQ'
+      userName: displayName || 'nameless user',
+      imgURL: photoURL || 'https://goo.gl/Fz9nrQ'
     };
-    console.log('data ' + data.email + '  ' + data.displayName + '  ' + data.uid);
+    console.log('data ' + data.email + '  ' + data.userName + '  ' + data.uid);
     return userRef.set(data);
   }
 }

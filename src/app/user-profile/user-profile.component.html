@@ -2,7 +2,7 @@
 
 </div>
 
-<ng-template #guerst>
+<ng-template #guest>
 <h3>Welcome!</h3>
 <p>please sign in to continue</p>
 <button (click)="auth.emailLogin()">Login in with your email</button>
@@ -11,8 +11,15 @@
 
 <ng-template #authenticated>
   <div *ngIf="auth.user | async as user" >
-    <h3>Hey {{ user.displayName }}, welcome back.</h3>
-    <img src="{{user.photoURL}}" alt="picture of {{user.displayName}}">
+    <h3>Hey {{ user.userName }}, welcome back</h3>
+    <img src="{{user.imgURL}}" alt="picture of {{user.userName}}">
   </div>
 
 </ng-template>
+
+<div class="button-bar">
+  <button type="button" routerLink="/" class="btn btn-warning">Home</button>
+  <button (click)='logOut()' class="btn btn-primary">Logout</button>
+  <!-- <button  [routerLink]="['/secret', user.uid]" class="btn btn-success">Secret</button> WORKS BUT CAUSES ' Cannot read property 'uid' of undefined' BUT STILL RETURNS IT SOMEHOW? -->
+  <button  (click)='toSecret()' class="btn btn-success">Secret</button>
+</div>

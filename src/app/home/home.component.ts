@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../core/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -8,9 +9,11 @@ import { AuthService } from '../core/auth.service';
 })
 export class HomeComponent implements OnInit {
 
+
   constructor(private authSvc: AuthService) { }
 
   ngOnInit() {
+
   }
 
   signOut() {
