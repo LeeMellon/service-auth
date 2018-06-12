@@ -1,6 +1,8 @@
 export class ProfileUser {
-    uid: string;
     email: string;
-    imgURL: string;
     userName: string;
+    imgURL: string;
+    uid: string;
+
+    constructor(email, userName, imgURL) {}
 }

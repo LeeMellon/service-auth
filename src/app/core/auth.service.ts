@@ -9,12 +9,6 @@ import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ProfileUser } from './profileuser.model';
 
-// export interface User {
-//   uid: string;
-//   email?: string | null;
-//   photoURL?: string;
-//   displayName?: string;
-// }
 
 @Injectable()
 export class AuthService {
@@ -88,13 +82,16 @@ export class AuthService {
 
   //// Email/Password Auth ////
 
-  emailSignUp(email: string, password: string, displayName: string, img: string) {
+  emailSignUp(email, password, displayName, img) {
+    console.log(displayName);
     return this.afAuth.auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(credential => {
+    .createUserWithEmailAndPassword(email, password)
+    .then(credential => {
+      const thisUser: ProfileUser = {email: email, userName: displayName, imgURL: img, uid: credential.uid};
+      console.log('thisUser on creation  ' + thisUser.uid + 'thisUser name  ' + thisUser.userName + 'email  ' + thisUser.email);
         this.notify.update('Welcome to Firestarter!!!', 'success');
         this.router.navigate(['profile']);
-        return this.updateNewUserData(credential.user, email, displayName, img); // if using firestore
+        return this.updateNewUserData(credential.user, thisUser); // if using firestore
       })
       .catch(error => this.handleError(error));
   }
@@ -152,16 +149,18 @@ export class AuthService {
    // Sets user data to firestore after succesful login
    // NOT DOING WHAT ITS SUPPOSED TO. FIRESTORE DOCS NOT SAVING CORRETLY(?)
   //  EXTRA USER INFO DOES NOT SAVE TO DB ???
-   private updateNewUserData(user: ProfileUser, email, displayName, photoURL) {
+   private updateNewUserData(user, thisUser: ProfileUser) {
     const userRef: AngularFirestoreDocument<ProfileUser> = this.afs.doc(
       `users/${user.uid}`
     );
+    console.log('usr ' + user.uid);
+    console.log('thisUser ' + thisUser.uid);
 
     const data: ProfileUser = {
       uid: user.uid,
-      email: user.email || null,
-      userName: displayName || 'nameless user',
-      imgURL: photoURL || 'https://goo.gl/Fz9nrQ'
+      email: user.email,
+      userName: thisUser.userName,
+      imgURL: thisUser.imgURL || 'https://goo.gl/Fz9nrQ'
     };
     console.log('data ' + data.email + '  ' + data.userName + '  ' + data.uid);
     return userRef.set(data);

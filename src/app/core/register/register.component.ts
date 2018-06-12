@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
     const username = form.value.username;
     const img = form.value.img;
     this.authservice.emailSignUp(email, password, username, img);
-    console.log('click');
+    console.log(username);
+    
   }
 }
