@@ -127,10 +127,6 @@ export class AuthService {
   }
 
    getSecrets() {
-    // const secretRef = this.db.collection('secrets').doc('mySecrets');
-    // secretRef.get().then(doc => {
-    //   return doc.data();
-    // });
     return this.db.collection('secrets').doc('mySecrets');
   }
 
