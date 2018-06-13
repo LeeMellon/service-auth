@@ -25,4 +25,16 @@ export class UserProfileComponent implements OnInit {
   this.router.navigate(['/secret', this.user.uid]);
   // this.auth.WRITE_METHOD_TO_LOG_ACCESS
   }
+
+  submit() {
+  const updateUser: ProfileUser = {
+    uid: this.user.uid,
+    email: this.user.email,
+    imgURL: this.user.imgURL,
+    userName: this.user.userName,
+    securityLvl: this.user.securityLvl
+  };
+  this.auth.update(updateUser);
+  }
+
 }

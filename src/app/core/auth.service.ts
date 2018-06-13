@@ -14,12 +14,13 @@ import { ProfileUser } from './profileuser.model';
 export class AuthService {
   user: Observable<ProfileUser | null>;
   loggedIn: boolean;
-
+  db;
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
-    private notify: NotifyService
+    private notify: NotifyService,
+
   ) {
     this.user = this.afAuth.authState.pipe(
       switchMap(user => {
@@ -32,6 +33,7 @@ export class AuthService {
         }
       })
     );
+    this.db = firebase.firestore();
   }
 
   ////// OAuth Methods /////
@@ -98,6 +100,7 @@ export class AuthService {
     return this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
       .catch(error => this.handleError(error));
+
   }
 
   // Sends email allowing user to reset password
@@ -110,12 +113,27 @@ export class AuthService {
       .catch(error => this.handleError(error));
   }
 
+  update(userData: ProfileUser) {
+    this.updateUserData(userData);
+    console.log('update click' + userData.securityLvl);
+
+  }
+
   signOut() {
     console.log(this.loggedIn);
     this.afAuth.auth.signOut().then(() => {
       this.router.navigate(['/']);
     });
   }
+
+   getSecrets() {
+    // const secretRef = this.db.collection('secrets').doc('mySecrets');
+    // secretRef.get().then(doc => {
+    //   return doc.data();
+    // });
+    return this.db.collection('secrets').doc('mySecrets');
+  }
+
 
   // If error, console log and notify user
   private handleError(error: Error) {

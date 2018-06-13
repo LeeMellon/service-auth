@@ -1,25 +1,51 @@
-<div *ngIf="auth.user | async; then authenticated else guest">
-
-</div>
-
-<ng-template #guest>
-<h3>Welcome!</h3>
-<p>please sign in to continue</p>
-<button (click)="auth.emailLogin()">Login in with your email</button>
-<button (click)="auth.googleLogin()" >Login with Google</button>
-</ng-template>
-
-<ng-template #authenticated>
-  <div *ngIf="auth.user | async as user" >
-    <h3>Hey {{ user.userName }}, welcome back</h3>
-    <img src="{{user.imgURL}}" alt="picture of {{user.userName}}">
+<div>
+  <div *ngIf="auth.user | async; then authenticated else guest">
+    
   </div>
-
-</ng-template>
-
-<div class="button-bar">
-  <button type="button" routerLink="/" class="btn btn-warning">Home</button>
-  <button (click)='logOut()' class="btn btn-primary">Logout</button>
-  <!-- <button  [routerLink]="['/secret', user.uid]" class="btn btn-success">Secret</button> WORKS BUT CAUSES ' Cannot read property 'uid' of undefined' BUT STILL RETURNS IT SOMEHOW? -->
-  <button  (click)='toSecret()' class="btn btn-success">Secret</button>
-</div>
+      
+      <ng-template #guest>
+        <h3>Welcome!</h3>
+        <p>please sign in to continue</p>
+        <button (click)="auth.emailLogin()">Login in with your email</button>
+        <button (click)="auth.googleLogin()" >Login with Google</button>
+      </ng-template>
+      
+      <ng-template #authenticated>
+        <div *ngIf="auth.user | async as user" >
+          <h3>Hey {{ user.userName }}, welcome back</h3>
+          <img src="{{user.imgURL}}" alt="picture of {{user.userName}}">
+        </div>
+        
+      </ng-template>
+      
+      <div class="button-bar">
+        <button type="button" routerLink="/" class="btn btn-warning">Home</button>
+        <button (click)='logOut()' class="btn btn-primary">Logout</button>
+        <!-- <button  [routerLink]="['/secret', user.uid]" class="btn btn-success">Secret</button> WORKS BUT CAUSES ' Cannot read property 'uid' of undefined' BUT STILL RETURNS IT SOMEHOW? -->
+        <button  (click)='toSecret()' class="btn btn-success">Secret</button>
+      </div>
+      
+      
+      <div>
+        <form (ngSubmit)="submit()" #formData="ngForm">
+          <div>
+            <label for="email">Edit Your Email</label>
+            <input type="email" name="email" [(ngModel)]="user.email">
+          </div>
+          <div>
+            <label for="img">Your Profile Pic URL</label>
+            <input type="text" name="img" [(ngModel)]="user.imgURL" >
+          </div>
+          <div>
+            <label for="userName">Your User Name</label>
+            <input type="text" name="userName" [(ngModel)]="user.userName" >
+          </div>
+          <div>
+            <label for="security">Your User Security Level</label>
+            <input type="number" name="securityLvl" [(ngModel)]="user.securityLvl" >
+          </div>
+          <button type="submit" (click)="submit()" >Submit Changes</button>
+          
+        </form>
+      </div>
+  </div>
